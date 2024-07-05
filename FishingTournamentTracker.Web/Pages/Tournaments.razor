@@ -4,9 +4,12 @@
 
 <PageTitle>Tournaments</PageTitle>
 
-<div>
-    <a href="/addtournament"><button class="btn btn-success float-end">Create Tournament</button></a>
+<div class="row mb-3 justify-content-end">
+    <div class="col-auto">
+        <a href="/addtournament"><button class="btn btn-success float-end">Create Tournament</button></a>
+    </div>
 </div>
+<hr />
 
 @if (TournamentList is not null && TournamentList.Any())
 {

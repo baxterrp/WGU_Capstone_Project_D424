@@ -4,10 +4,21 @@
 
 <PageTitle>View Users</PageTitle>
 
-<div>
-    <a href="/adduser"><button class="btn btn-success float-end">Add User</button></a>
-    <a href="/user/automated"><button class="btn btn-warning float-end me-2">Automated Upload</button></a>
+<div class="row mb-3 justify-content-end">
+    <div class="col-auto">
+        <a href="/user/automated"><button class="btn btn-warning">Automated Upload</button></a>
+    </div>
+    <div class="col-auto">
+        <a href="/adduser"><button class="btn btn-success">Add User</button></a>
+    </div>
+    <div class="col-auto">
+        <input type="text" class="form-control" placeholder="Search User By Name"/>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary btn">Search</button>
+    </div>
 </div>
+<hr />
 
 @if (SelectedUsers is not null && SelectedUsers.Any())
 {
@@ -20,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(var user in SelectedUsers)
+            @foreach (var user in SelectedUsers)
             {
                 <tr @onclick="() => GoToUserPage(user.Id!)">
                     <td>@user.FirstName @user.LastName</td>
@@ -33,5 +44,7 @@
 }
 else
 {
-    <p>No Users Found...</p>
+    <div class="row">
+        <p>No Users Found...</p>
+    </div>
 }
