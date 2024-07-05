@@ -1,0 +1,37 @@
+﻿@page "/users"
+@inject Services.IUserService userService;
+@inject NavigationManager navigationManager;
+
+<PageTitle>View Users</PageTitle>
+
+<div>
+    <a href="/adduser"><button class="btn btn-success float-end">Add User</button></a>
+    <a href="/user/automated"><button class="btn btn-warning float-end me-2">Automated Upload</button></a>
+</div>
+
+@if (SelectedUsers is not null && SelectedUsers.Any())
+{
+    <table class="table table-hover table-striped" role="button">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Grade</th>
+                <th scope="col">Birthday</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var user in SelectedUsers)
+            {
+                <tr @onclick="() => GoToUserPage(user.Id!)">
+                    <td>@user.FirstName @user.LastName</td>
+                    <td>@user.Grade</td>
+                    <td>@user.Birthday!.Value.ToString("d")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No Users Found...</p>
+}

@@ -1,0 +1,37 @@
+﻿@page "/tournaments"
+@inject Services.ITournamentService tournamentService;
+@inject NavigationManager navigationManager;
+
+<PageTitle>Tournaments</PageTitle>
+
+<div>
+    <a href="/addtournament"><button class="btn btn-success float-end">Create Tournament</button></a>
+</div>
+
+@if (TournamentList is not null && TournamentList.Any())
+{
+    <table class="table table-hover table-striped" role="button">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Lake</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tournament in TournamentList)
+            {
+                <tr @onclick="() => GoToTournamentPage(tournament.Id!)">
+                    <td>@tournament.Name</td>
+                    <td>@tournament.Lake</td>
+                    <td>@tournament.Date!.Value.ToString("d")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No Tournaments Found...</p>
+}
+

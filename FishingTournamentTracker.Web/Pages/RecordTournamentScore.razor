@@ -1,0 +1,56 @@
+﻿@page "/tournament/{tournamentId}/record"
+@inject Services.ITournamentService tournamentService;
+@inject NavigationManager navigationManager;
+
+@if (SelectedTournament is not null)
+{
+    <h3>Record Scores For Tournament @SelectedTournament.Name</h3>
+    <select class="form-select mb-3" aria-label="userone" @bind="SelectedTeamId">
+        <option>Select a Team</option>
+
+        @foreach (var team in SelectedTournament.RegisteredTeams!.Where(team => !SelectedTournament.Results!.Any(result => result.TeamId == team.Id)).ToList())
+        {
+            var teamName = string.Join("-", $"{team.UserOne!.FirstName} {team.UserOne.LastName}", $"{team.UserTwo!.FirstName} {team.UserTwo.LastName}");
+            <option value="@team.Id">@teamName</option>
+        }
+
+    </select>
+    @if (!string.IsNullOrWhiteSpace(SelectedTeamId))
+    {
+        <h3>Add Fish Cought</h3>
+        <form method="post" @onsubmit="AddFish" class="mb-3">
+            <div class="mb-3">
+                <label for="weight" class="form-label">Weight</label>
+                <input type="text" placeholder="Leave blank or 0 if not yet weighed" class="form-control" id="weight" aria-describedby="weight" @bind="FishWeight">
+            </div>
+            <button class="btn btn-primary float-end" @onclick="OnSubmit">Save Record</button>
+            <button class="btn btn-success float-end me-2">Add Fish</button>
+        </form>
+        <table class="table table-hover table-striped" role="button">
+            <thead>
+                <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var index = 1;
+
+                    foreach (var fish in TeamScore!.Fish.OrderByDescending(f => f.Weight))
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@fish.Weight lb</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    }
+}
+else
+{
+    <p>Loading...</p>
+}

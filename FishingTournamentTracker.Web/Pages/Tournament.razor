@@ -1,0 +1,112 @@
+﻿@page "/tournament/{tournamentId}"
+@inject Services.ITournamentService tournamentService;
+@inject NavigationManager navigationManager;
+
+<PageTitle>View/Edit Tournament</PageTitle>
+
+@if (SelectedTournament is not null)
+{
+    <form method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input readonly @bind="SelectedTournament.Name" type="text" class="form-control" id="name" aria-describedby="name">
+        </div>
+        <div class="mb-3">
+            <label for="lake" class="form-label">Lake</label>
+            <input readonly @bind="SelectedTournament.Lake" class="form-control" id="lake">
+        </div>
+        <div class="mb-3">
+            <label class="form-check-label" for="date">Date</label>
+            <input readonly @bind="SelectedTournament.Date" type="date" class="form-control" id="date">
+        </div>
+    </form>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#teams" type="button" role="tab" aria-controls="home" aria-selected="true">Teams</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false">Results</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="teams" role="tabpanel" aria-labelledby="teams-tab">
+            <div class="mt-1">
+                <button class="btn btn-success float-end" @onclick="RegisterTeam">Register Team</button>
+
+                @if (SelectedTournament.RegisteredTeams is not null && SelectedTournament.RegisteredTeams.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Team Member One</th>
+                                <th scope="col">Team Member Two</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var team in SelectedTournament.RegisteredTeams)
+                            {
+                                <tr>
+                                    <td>
+                                        @team.UserOne!.FirstName @team.UserOne!.LastName
+                                    </td>
+                                    <td>
+                                        @team.UserTwo!.FirstName @team.UserTwo!.LastName
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No Registered Teams</p>
+                }
+            </div>
+        </div>
+        <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
+            <div class="mt-1">
+                <button class="btn btn-success float-end" @onclick="GoToRecordScorePage" disabled="@RecordScoreIsDisabled">Record Score</button>
+                @if (SelectedTournament.Results is not null && SelectedTournament.Results.Any())
+                {
+                    <table class="table table-hover table-striped" role="button">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Fish</th>
+                                <th scope="col">Biggest Fish</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Place</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var index = 0;
+                            }
+                            @foreach (var result in SelectedTournament.Results.OrderByDescending(result => result.Fish.Sum(f => f.Weight)).Select(r => r).ToList())
+                            {
+                                var fishCount = result.Fish?.Any() ?? false ? $"{result.Fish.Count(fish => fish.Weighed)}/{result.Fish.Count}" : string.Empty;
+                                var biggestFish = result.Fish?.Any() ?? false ? result.Fish.Max(fish => fish.Weight) : 0;
+                                var total = result.Fish?.Any() ?? false ? result.Fish.Sum(fish => fish.Weight) : 0;
+                                var place = SelectedTournament.Results.Count - index++;
+
+                                <tr>
+                                    <td>@result.Name</td>
+                                    <td>@fishCount</td>
+                                    <td>@biggestFish</td>
+                                    <td>@total</td>
+                                    <td>@place</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Could not load tournament @TournamentId</p>
+}
+

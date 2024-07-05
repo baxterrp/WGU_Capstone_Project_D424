@@ -1,0 +1,33 @@
+﻿@page "/tournament/{tournamentId}/registration"
+@inject Services.ITournamentService tournamentService;
+@inject Services.IUserService userService;
+@inject NavigationManager navigatonManager;
+
+@if (Tournament is not null && Users is not null)
+{
+    <h3>Register Team For Tournament '@Tournament!.Name'</h3>
+
+    <select class="form-select mb-3" aria-label="userone" @bind="TournamentRegistration!.UserOne">
+        <option>Select a User</option>
+        
+        @foreach(var user in Users)
+        {
+            <option value="@user.Id">@user.FirstName @user.LastName</option>
+        }
+    </select>
+
+    <select class="form-select mb-3" aria-label="usertwo" @bind="TournamentRegistration!.UserTwo">
+        <option>Select a User</option>
+
+        @foreach (var user in Users)
+        {
+            <option value="@user.Id">@user.FirstName @user.LastName</option>
+        }
+    </select>
+
+    <button class="btn btn-primary" @onclick="OnSubmit" disabled="@RegisterIsDisabled">Register</button>
+}
+else
+{
+    <p class="mt-3">Loading...</p>
+}

@@ -1,0 +1,21 @@
+﻿@page "/addtournament"
+@inject Services.ITournamentService tournamentService;
+
+<PageTitle>Create Tournament</PageTitle>
+<h1>Create Tournament</h1>
+<form method="post" @onsubmit="async () => await OnSubmit()">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input @bind="SelectedTournament!.Name" type="text" class="form-control" id="name" aria-describedby="name">
+    </div>
+    <div class="mb-3">
+        <label for="lake" class="form-label">Lake</label>
+        <input @bind="SelectedTournament!.Lake" class="form-control" id="lake">
+    </div>
+    <div class="mb-3">
+        <label class="form-check-label" for="date">Date</label>
+        <input @bind="SelectedTournament!.Date" type="date" class="form-control" id="date">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
