@@ -16,9 +16,19 @@ public class TournamentService(HttpClient httpClient) : BaseHttpClientService(ht
         });
     }
 
+    public async Task<byte[]?> DownloadResultsSpreadsheet(string tournamentId)
+    {
+        return await TrySendFileDownload(new HttpRequestMessage(HttpMethod.Get, $"{_tournamentApiRoute}/download/{tournamentId}"));
+    }
+
     public async Task<TournamentViewModel?> GetTournamentById(string tournamentId)
     {
         return await TrySendHttpRequest<TournamentViewModel>(new HttpRequestMessage(HttpMethod.Get, $"{_tournamentApiRoute}/{tournamentId}"));
+    }
+
+    public async Task<IEnumerable<TournamentResultPrintout>?> GetTournamentResultPrintout(string tournamentId)
+    {
+        return await TrySendHttpRequest<IEnumerable<TournamentResultPrintout>>(new HttpRequestMessage(HttpMethod.Get, $"{_tournamentApiRoute}/result/{tournamentId}"));
     }
 
     public async Task<TournamentRegistration?> RegisterTeam(TournamentRegistration teamRegistration)

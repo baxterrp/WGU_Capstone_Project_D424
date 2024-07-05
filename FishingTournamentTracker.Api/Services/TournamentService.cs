@@ -2,11 +2,20 @@
 using FishingTournamentTracker.Api.Repositories;
 using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Library.Models.ViewModels;
-using System.Reflection.Metadata.Ecma335;
 
 namespace FishingTournamentTracker.Api.Services;
-public class TournamentService(ITournamentRepository tournamentRepository, IUserService userService) : ITournamentService
+public class TournamentService(ITournamentRepository tournamentRepository, IUserService userService, IFileParser fileParser) : ITournamentService
 {
+    public async Task<byte[]> DownloadResultExcel(string tournamentId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentId, nameof(tournamentId));
+
+        var tournament = await GetTournamentById(tournamentId);
+        var printout = tournament.ToTournamentResultPrintout();
+
+        return fileParser.GenerateExcel(printout);
+    }
+
     public async Task<Tournament> CreateTournament(Tournament tournament)
     {
         ArgumentNullException.ThrowIfNull(tournament, nameof(tournament));
@@ -55,6 +64,12 @@ public class TournamentService(ITournamentRepository tournamentRepository, IUser
         }
 
         return registeredTeams;
+    }
+
+    public async Task<IEnumerable<TournamentResultPrintout>> GetResultPrintout(string tournamentId)
+    {
+        var tournament = await GetTournamentById(tournamentId);
+        return tournament.ToTournamentResultPrintout();
     }
 
     public async Task<IEnumerable<TeamScoreViewModel>> GetResults(string tournamentId)

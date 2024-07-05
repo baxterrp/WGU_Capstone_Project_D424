@@ -12,4 +12,6 @@ public interface ITournamentService
     Task<IEnumerable<TeamViewModel>> GetRegisteredTeams(string tournamentId);
     Task<TeamScoreViewModel> SaveTeamScore(TeamScoreViewModel teamScoreViewModel);
     Task<IEnumerable<TeamScoreViewModel>> GetResults(string tournamentId);
+    Task<IEnumerable<TournamentResultPrintout>> GetResultPrintout(string tournamentId);
+    Task<byte[]> DownloadResultExcel(string tournamentId);
 }

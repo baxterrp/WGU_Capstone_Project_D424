@@ -1,5 +1,6 @@
 ﻿@page "/tournament/{tournamentId}"
 @inject Services.ITournamentService tournamentService;
+@inject IJSRuntime jsRuntime;
 @inject NavigationManager navigationManager;
 
 <PageTitle>View/Edit Tournament</PageTitle>
@@ -66,36 +67,31 @@
         </div>
         <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
             <div class="mt-1">
-                <button class="btn btn-success float-end" @onclick="GoToRecordScorePage" disabled="@RecordScoreIsDisabled">Record Score</button>
-                @if (SelectedTournament.Results is not null && SelectedTournament.Results.Any())
+                <button class="btn btn-primary float-end" @onclick="GoToRecordScorePage" disabled="@RecordScoreIsDisabled">Record Score</button>
+                <button class="btn btn-success float-end me-2" @onclick="DownloadResultPrintout" disabled="@DownloadResultIsDisabled">Download Result Printout</button>
+                @if (TournamentResults is not null && TournamentResults.Any())
                 {
                     <table class="table table-hover table-striped" role="button">
                         <thead>
                             <tr>
+                                <th scope="col">Place</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Fish</th>
                                 <th scope="col">Biggest Fish</th>
                                 <th scope="col">Total</th>
-                                <th scope="col">Place</th>
+                                <th scope="col">Points</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @{
-                                var index = 0;
-                            }
-                            @foreach (var result in SelectedTournament.Results.OrderByDescending(result => result.Fish.Sum(f => f.Weight)).Select(r => r).ToList())
+                            @foreach (var result in TournamentResults.OrderBy(result => result.Place))
                             {
-                                var fishCount = result.Fish?.Any() ?? false ? $"{result.Fish.Count(fish => fish.Weighed)}/{result.Fish.Count}" : string.Empty;
-                                var biggestFish = result.Fish?.Any() ?? false ? result.Fish.Max(fish => fish.Weight) : 0;
-                                var total = result.Fish?.Any() ?? false ? result.Fish.Sum(fish => fish.Weight) : 0;
-                                var place = SelectedTournament.Results.Count - index++;
-
                                 <tr>
-                                    <td>@result.Name</td>
-                                    <td>@fishCount</td>
-                                    <td>@biggestFish</td>
-                                    <td>@total</td>
-                                    <td>@place</td>
+                                    <td>@result.Place</td>
+                                    <td>@result.Team</td>
+                                    <td>@result.Fish</td>
+                                    <td>@result.BiggestFish lbs</td>
+                                    <td>@result.TotalWeight lbs</td>
+                                    <td>@result.Points</td>
                                 </tr>
                             }
                         </tbody>

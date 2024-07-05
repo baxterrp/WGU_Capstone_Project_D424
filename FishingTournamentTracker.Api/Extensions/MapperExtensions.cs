@@ -5,6 +5,35 @@ namespace FishingTournamentTracker.Api.Extensions;
 
 public static class MapperExtensions
 {
+    public static IEnumerable<TournamentResultPrintout> ToTournamentResultPrintout(this TournamentViewModel tournament)
+    {
+        var place = 1;
+        var sortedResults = tournament.Results!.OrderByDescending(result => result.Fish.Sum(f => f.Weight)).ToList();
+        var printouts = new List<TournamentResultPrintout>();
+
+        foreach (var result in sortedResults)
+        {
+            var hasFish = result.Fish?.Any() ?? false;
+            var fishCount = hasFish ? $"{result.Fish!.Count(fish => fish.Weighed)}/{result.Fish!.Count}" : string.Empty;
+            var biggestFish = hasFish ? result.Fish!.Max(fish => fish.Weight) : 0;
+            var totalWeight = hasFish ? result.Fish!.Sum(fish => fish.Weight) : 0;
+            var points = sortedResults.Count - (place - 1);
+
+            printouts.Add(new TournamentResultPrintout
+            {
+                Place = place,
+                Team = result.Name,
+                Fish = fishCount,
+                BiggestFish = biggestFish,
+                TotalWeight = totalWeight,
+                Points = points,
+            });
+
+            place++;
+        }
+
+        return printouts;
+    }
     public static TournamentViewModel ToTournamentViewModel(this Tournament tournament, List<TeamViewModel> registeredTeams, List<TeamScoreViewModel> teamScores)
     {
         return new TournamentViewModel

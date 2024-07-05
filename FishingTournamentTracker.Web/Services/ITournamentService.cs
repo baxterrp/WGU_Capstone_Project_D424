@@ -10,4 +10,6 @@ public interface ITournamentService
     Task<Tournament?> CreateTournament(Tournament tournament);
     Task<TournamentRegistration?> RegisterTeam(TournamentRegistration teamRegistration);
     Task<TeamScoreViewModel?> SaveTeamScore(TeamScoreViewModel teamScore);
+    Task<IEnumerable<TournamentResultPrintout>?> GetTournamentResultPrintout(string tournamentId);
+    Task<byte[]?> DownloadResultsSpreadsheet(string tournamentId);
 }
