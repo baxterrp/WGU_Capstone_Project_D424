@@ -30,9 +30,23 @@ public class UserService(IUserRepository userRepository, IFileParser fileParser)
         return await userRepository.UpdateUser(user);
     }
 
-    public async Task<IEnumerable<User>> FilterUsers(UserFilter userFilter)
+    public async Task<IEnumerable<User>> GetAllUsers(UserFilter userFilter)
     {
         return await userRepository.FilterUsers(userFilter);
+    }
+
+    public async Task<PaginatedResult<User>> FilterUsers(UserFilter userFilter)
+    {
+        var users = await userRepository.FilterUsers(userFilter);
+        var count = await userRepository.CountUsers(userFilter);
+
+        return new PaginatedResult<User>
+        {
+            PageNumber = userFilter.Page,
+            PageSize = userFilter.PageSize,
+            Data = users,
+            TotalPages = (int)Math.Ceiling((decimal)count / userFilter.PageSize!.Value)
+        };
     }
 
     public async Task<User> GetUserById(string userId)
@@ -45,4 +59,5 @@ public class UserService(IUserRepository userRepository, IFileParser fileParser)
         ArgumentNullException.ThrowIfNull(user, nameof(user));
         ArgumentException.ThrowIfNullOrWhiteSpace(user.FirstName, nameof(user.FirstName));
     }
+
 }

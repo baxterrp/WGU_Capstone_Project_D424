@@ -32,7 +32,7 @@ public partial class TeamRegistration
             Tournament = TournamentId,
         };
         Tournament = await tournamentService.GetTournamentById(TournamentId!);
-        var users = await userService.GetUsers(string.Empty, string.Empty);
+        var users = await userService.GetAllUsers();
         Users = users is not null ? [.. users] : [];
     }
 

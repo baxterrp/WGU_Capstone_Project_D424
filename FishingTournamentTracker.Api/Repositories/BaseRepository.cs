@@ -10,6 +10,16 @@ namespace FishingTournamentTracker.Api.Repositories;
 
 public abstract class BaseRepository(IOptions<DatabaseConfiguration> databaseConfiguration)
 {
+    protected int? PageSize { get; set; }
+
+    protected int? CurrentPage { get; set; }
+
+    protected async Task<int> Count<TEntity>(DynamicParameters dynamicParameters) where TEntity : IDatabaseEntity
+    {
+        using var connection = new SqlConnection(databaseConfiguration.Value.ConnectionString);
+        return await connection.QuerySingleAsync<int>(BuildCountQuery<TEntity>(dynamicParameters), dynamicParameters);
+    }
+
     protected async Task<TEntity> Insert<TEntity>(TEntity entity) where TEntity : IDatabaseEntity
     {
         entity.Id = Guid.NewGuid().ToString();
@@ -34,19 +44,43 @@ public abstract class BaseRepository(IOptions<DatabaseConfiguration> databaseCon
         using var connection = new SqlConnection(databaseConfiguration.Value.ConnectionString);
         return await connection.QuerySingleAsync<TEntity>(BuildFindByIdQuery<TEntity>(), new { Id = entityId });
     }
-    private static string BuildSearchQuery<TEntity>(DynamicParameters dynamicParameters)
+
+
+    private string BuildSearchQuery<TEntity>(DynamicParameters dynamicParameters)
     {
         var stringBuilder = new StringBuilder();
         stringBuilder.Append("SELECT * FROM ");
         stringBuilder.Append($"[dbo].[{typeof(TEntity).Name}]");
-        
+
+        BuildWhereClause(dynamicParameters, stringBuilder);
+
+        if (CurrentPage is not null && PageSize is not null)
+        {
+            // sorted value is required for pagination
+            stringBuilder.Append(" ORDER BY [Id]");
+            stringBuilder.Append($" OFFSET {(CurrentPage - 1) * PageSize} ROWS FETCH NEXT {PageSize} ROWS ONLY");
+        }
+
+        return stringBuilder.ToString();
+    }
+
+    private static string BuildCountQuery<TEntity>(DynamicParameters dynamicParameters)
+    {
+        var stringBuilder = new StringBuilder();
+        stringBuilder.Append($"SELECT COUNT(*) FROM [dbo].[{typeof(TEntity).Name}]");
+
+        BuildWhereClause(dynamicParameters, stringBuilder);
+
+        return stringBuilder.ToString();
+    }
+
+    private static void BuildWhereClause(DynamicParameters dynamicParameters, StringBuilder stringBuilder)
+    {
         if (dynamicParameters.ParameterNames.Any())
         {
             stringBuilder.Append(" WHERE ");
             stringBuilder.Append(string.Join(" AND ", dynamicParameters.ParameterNames.Select(parameter => $"[{parameter}] = @{parameter}")));
         }
-
-        return stringBuilder.ToString();
     }
 
     private static string BuildFindByIdQuery<TEntity>()

@@ -13,24 +13,14 @@ public class UserRepository(IOptions<DatabaseConfiguration> databaseConfiguratio
         return await Insert(user);
     }
 
+    public async Task<int> CountUsers(UserFilter userFilter)
+    {
+        return await Count<User>(BuildDynamicParameters(userFilter));
+    }
+
     public async Task<IEnumerable<User>> FilterUsers(UserFilter userFilter)
     {
-        var dynamicParameters = new DynamicParameters();
-
-        if (userFilter != null)
-        {
-            if (!string.IsNullOrWhiteSpace(userFilter.Name))
-            {
-                dynamicParameters.Add(nameof(UserFilter.Name), userFilter.Name);
-            }
-
-            if (userFilter.Grade is not null)
-            {
-                dynamicParameters.Add(nameof(userFilter.Grade), userFilter.Grade);
-            }
-        }
-
-        return await Search<User>(dynamicParameters);
+        return await Search<User>(BuildDynamicParameters(userFilter));
     }
 
     public async Task<User> GetUserById(string userId)
@@ -41,5 +31,35 @@ public class UserRepository(IOptions<DatabaseConfiguration> databaseConfiguratio
     public async Task<User> UpdateUser(User user)
     {
         return await Update(user);
+    }
+
+    private DynamicParameters BuildDynamicParameters(UserFilter userFilter)
+    {
+        var dynamicParameters = new DynamicParameters();
+
+        if (userFilter != null)
+        {
+            if (!string.IsNullOrWhiteSpace(userFilter.Name))
+            {
+                dynamicParameters.Add("FirstName", userFilter.Name);
+            }
+
+            if (userFilter.Grade is not null)
+            {
+                dynamicParameters.Add(nameof(userFilter.Grade), userFilter.Grade);
+            }
+
+            if (userFilter.Page is not null)
+            {
+                CurrentPage = userFilter.Page;
+            }
+
+            if (userFilter.PageSize is not null)
+            {
+                PageSize = userFilter.PageSize;
+            }
+        }
+
+        return dynamicParameters;
     }
 }

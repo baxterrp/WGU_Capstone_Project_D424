@@ -1,11 +1,7 @@
 ﻿using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Library.Models.ViewModels;
+using FishingTournamentTracker.Library.Utility;
 using FishingTournamentTracker.Web.Extensions;
-using System.Net.Mime;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Json;
-using System.Web;
 
 namespace FishingTournamentTracker.Web.Services;
 
@@ -34,18 +30,43 @@ public class UserService(HttpClient httpClient) : BaseHttpClientService(httpClie
         });
     }
 
-    public async Task<IEnumerable<User>> GetUsers(string? name, string? grade)
+    public async Task<IEnumerable<User>> GetAllUsers()
     {
-        var queryParameters = new List<string?> { name, grade }
-            .Where(parameter => !string.IsNullOrWhiteSpace(parameter));
-        var apiUrl = _userApiRoute;
+        return await TrySendHttpRequest<IEnumerable<User>>(new HttpRequestMessage(HttpMethod.Get, _userApiRoute)) ?? [];
+    }
 
-        if (queryParameters.Any())
+    public async Task<PaginatedResult<User>?> FilterUsers(string? name, string? grade, int? page, int? size)
+    {
+        var queryParameters = new List<(string ParameterName, object? ParameterValue)>();
+
+        if (!string.IsNullOrWhiteSpace(name))
         {
-            apiUrl += "?" + string.Join("&", queryParameters.Select(parameter => $"{nameof(parameter)}={parameter}"));
+            queryParameters.Add((nameof(name), name));
         }
 
-        return await TrySendHttpRequest<IEnumerable<User>>(new HttpRequestMessage(HttpMethod.Get, apiUrl)) ?? [];
+        if (!string.IsNullOrWhiteSpace(grade))
+        {
+            queryParameters.Add((nameof(grade), grade));
+        }
+
+        if (page is not null)
+        {
+            queryParameters.Add((nameof(page), page));
+        }
+
+        if (size is not null)
+        {
+            queryParameters.Add((nameof(size), size));
+        }
+
+        var apiUrl = $"{_userApiRoute}/filter";
+
+        if (queryParameters.Count != 0)
+        {
+            apiUrl += "?" + string.Join("&", queryParameters.Select(parameter => $"{parameter.ParameterName}={parameter.ParameterValue}"));
+        }
+
+        return await TrySendHttpRequest<PaginatedResult<User>>(new HttpRequestMessage(HttpMethod.Get, apiUrl));
     }
 
     public async Task<IEnumerable<User>?> AutomatedUserUpload(string upload)

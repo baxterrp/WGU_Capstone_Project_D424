@@ -12,10 +12,10 @@
         <a href="/adduser"><button class="btn btn-success">Add User</button></a>
     </div>
     <div class="col-auto">
-        <input type="text" class="form-control" placeholder="Search User By Name"/>
+        <input @bind="SearchValue" type="text" class="form-control" placeholder="Search User By First Name" />
     </div>
     <div class="col-auto">
-        <button class="btn btn-primary btn">Search</button>
+        <button class="btn btn-primary btn" @onclick="async () => await Search()">Search</button>
     </div>
 </div>
 <hr />
@@ -41,6 +41,33 @@
             }
         </tbody>
     </table>
+
+    var isPageOne = PageNumber == 1;
+    var previousPageClass = isPageOne ? "page-item disabled" : "page-item";
+    var isLastPage = PageNumber == TotalPages;
+    var nextPageClass = isLastPage ? "page-item disabled" : "page-item";
+
+    <nav aria-label="...">
+        <ul class="pagination">
+            <li class="@previousPageClass">
+                <a class="page-link" @onclick="async () => await Search(PageNumber - 1)" tabindex="-1">Previous</a>
+            </li>
+            @if (!isPageOne)
+            {
+                <li class="page-item"><a class="page-link" @onclick="async () => await Search(PageNumber - 1)">@(PageNumber - 1)</a></li>
+            }
+            <li class="page-item active" aria-current="page">
+                <a class="page-link">@PageNumber</a>
+            </li>
+            @if (!isLastPage)
+            {
+                <li class="page-item"><a class="page-link" @onclick="async () => await Search(PageNumber + 1)">@(PageNumber + 1)</a></li>
+            }
+            <li class="@nextPageClass">
+                <a class="page-link" @onclick="async () => await Search(PageNumber + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
 }
 else
 {

@@ -9,4 +9,5 @@ public interface IUserRepository
     Task<IEnumerable<User>> FilterUsers(UserFilter userFilter);
     Task<User> UpdateUser(User user);
     Task<User> GetUserById(string userId);
+    Task<int> CountUsers(UserFilter userFilter);
 }
