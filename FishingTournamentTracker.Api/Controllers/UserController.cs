@@ -3,7 +3,6 @@ using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Library.Models.ViewModels;
 using FishingTournamentTracker.Library.Utility;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Mime;
 
 namespace FishingTournamentTracker.Api.Controllers;
 
@@ -42,7 +41,11 @@ public class UserController(IUserService userService) : BaseApiController
     }
 
     [HttpGet("filter")]
-    public async Task<IActionResult> FilterUsers([FromQuery] string? name, [FromQuery] int? grade, [FromQuery] int? page = 1, [FromQuery] int? size = 10)
+    public async Task<IActionResult> FilterUsers(
+        [FromQuery] string? name,
+        [FromQuery] int? grade,
+        [FromQuery] int? page = 1,
+        [FromQuery] int? size = 10)
     {
         return await ExecuteControllerAction(async () =>
         {

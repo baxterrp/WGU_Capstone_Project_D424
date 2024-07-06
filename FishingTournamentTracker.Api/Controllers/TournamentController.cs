@@ -2,7 +2,6 @@
 using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Library.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 
 namespace FishingTournamentTracker.Api.Controllers;
 

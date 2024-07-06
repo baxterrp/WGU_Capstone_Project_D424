@@ -14,7 +14,6 @@ public partial class AddTournament
     private async Task OnSubmit()
     {
         await tournamentService.CreateTournament(SelectedTournament!);
-
-        SelectedTournament = new();
+        navigationManager.NavigateTo("/tournaments");
     }
 }

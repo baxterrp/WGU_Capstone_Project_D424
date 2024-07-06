@@ -96,8 +96,8 @@ public abstract class BaseRepository(IOptions<DatabaseConfiguration> databaseCon
     private static string BuildUpdateCommand<TEntity>(TEntity entity)
     {
         var properties = GetPropertyInfo(entity);
-        var output = string.Join(",", properties.Select(x => $"INSERTED.{x.Name}"));
-        var sets = string.Join(",", properties.Select(x => $"{x.Name} = @{x.Name}"));
+        var output = string.Join(",", properties.Select(property => $"INSERTED.{property.Name}"));
+        var sets = string.Join(",", properties.Select(property => $"{property.Name} = @{property.Name}"));
 
         var stringBuilder = new StringBuilder();
         stringBuilder.Append("UPDATE ");
@@ -114,9 +114,9 @@ public abstract class BaseRepository(IOptions<DatabaseConfiguration> databaseCon
     private static string BuildAddCommand<TEntity>(TEntity entity)
     {
         var properties = GetPropertyInfo(entity);
-        var columns = string.Join(",", properties.Select(x => x.Name));
-        var output = string.Join(",", properties.Select(x => $"INSERTED.{x.Name}"));
-        var values = string.Join(",", properties.Select(x => $"@{x.Name}"));
+        var columns = string.Join(",", properties.Select(property => property.Name));
+        var output = string.Join(",", properties.Select(property => $"INSERTED.{property.Name}"));
+        var values = string.Join(",", properties.Select(property => $"@{property.Name}"));
 
         var stringBuilder = new StringBuilder();
         stringBuilder.Append("INSERT INTO ");

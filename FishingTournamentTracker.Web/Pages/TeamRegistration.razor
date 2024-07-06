@@ -1,7 +1,7 @@
 ﻿@page "/tournament/{tournamentId}/registration"
-@inject Services.ITournamentService tournamentService;
-@inject Services.IUserService userService;
-@inject NavigationManager navigatonManager;
+@inject Services.ITournamentService tournamentService
+@inject Services.IUserService userService
+@inject NavigationManager navigatonManager
 
 @if (Tournament is not null && Users is not null)
 {

@@ -1,35 +1,34 @@
 ﻿using System.Text.Json;
 
-namespace FishingTournamentTracker.Web.Services
+namespace FishingTournamentTracker.Web.Services;
+
+public abstract class BaseHttpClientService(HttpClient httpClient)
 {
-    public abstract class BaseHttpClientService(HttpClient httpClient)
+    protected async Task<TEntity?> TrySendHttpRequest<TEntity>(HttpRequestMessage httpRequestMessage)
     {
-        protected async Task<TEntity?> TrySendHttpRequest<TEntity>(HttpRequestMessage httpRequestMessage)
+        try
         {
-            try
-            {
-                var httpResponse = await httpClient.SendAsync(httpRequestMessage);
-                var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<TEntity>(stringResponse);
+            var httpResponse = await httpClient.SendAsync(httpRequestMessage);
+            var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<TEntity>(stringResponse);
 
-            }
-            catch
-            {
-                return default!;
-            }
         }
-
-        protected async Task<byte[]> TrySendFileDownload(HttpRequestMessage httpRequestMessage)
+        catch
         {
-            try
-            {
-                var httpResponse = await httpClient.SendAsync(httpRequestMessage);
-                return await httpResponse.Content.ReadAsByteArrayAsync();
-            }
-            catch
-            {
-                return default!;
-            }
+            return default!;
+        }
+    }
+
+    protected async Task<byte[]> TrySendFileDownload(HttpRequestMessage httpRequestMessage)
+    {
+        try
+        {
+            var httpResponse = await httpClient.SendAsync(httpRequestMessage);
+            return await httpResponse.Content.ReadAsByteArrayAsync();
+        }
+        catch
+        {
+            return default!;
         }
     }
 }
