@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FishingTournamentTracker.Api.Exeptions;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -22,6 +23,11 @@ namespace FishingTournamentTracker.Api.Controllers
             {
                 Console.WriteLine(argumentException.Message);
                 return BadRequest(argumentException.Message);
+            }
+            // no message needed here, just return a 401
+            catch (UnauthorizedLoginAttemptException)
+            {
+                return Unauthorized();
             }
             catch (Exception exception)
             {

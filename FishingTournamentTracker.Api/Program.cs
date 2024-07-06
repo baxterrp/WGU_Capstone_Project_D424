@@ -12,7 +12,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITournamentService, TournamentService>();
+builder.Services.AddTransient<IAdminService, AdminService>();
 builder.Services.AddTransient<ITournamentRepository, TournamentRepository>();
+builder.Services.AddTransient<IAdminRepository, AdminRepository>();
 builder.Services.AddTransient<IFileParser, FileParser>();
 builder.Services.AddOptions<DatabaseConfiguration>()
     .Configure(config => config.ConnectionString = builder.Configuration.GetConnectionString("FishingTournamentDbConnectionString")
