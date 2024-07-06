@@ -1,4 +1,6 @@
-﻿namespace FishingTournamentTracker.Web.Pages;
+﻿using FishingTournamentTracker.Web.Constants;
+
+namespace FishingTournamentTracker.Web.Pages;
 
 using TournamentModel = Library.Models.DataModels.Tournament;
 
@@ -14,9 +16,9 @@ public partial class AddTournament : BaseFormValidationPage<TournamentModel>
 
     private async Task OnSubmit()
     {
-        InputValidationClasses![nameof(TournamentModel.Name)] = string.IsNullOrWhiteSpace(SelectedTournament?.Name) ? "is-invalid" : string.Empty;
-        InputValidationClasses![nameof(TournamentModel.Lake)] = string.IsNullOrWhiteSpace(SelectedTournament?.Lake) ? "is-invalid" : string.Empty;
-        InputValidationClasses![nameof(TournamentModel.Date)] = SelectedTournament?.Date is null ? "is-invalid" : string.Empty;
+        InputValidationClasses![nameof(TournamentModel.Name)] = string.IsNullOrWhiteSpace(SelectedTournament?.Name) ? ClassNames.InvalidField : string.Empty;
+        InputValidationClasses![nameof(TournamentModel.Lake)] = string.IsNullOrWhiteSpace(SelectedTournament?.Lake) ? ClassNames.InvalidField : string.Empty;
+        InputValidationClasses![nameof(TournamentModel.Date)] = SelectedTournament?.Date is null ? ClassNames.InvalidField : string.Empty;
 
         if (CheckHasFormErrors()) { return; }
 

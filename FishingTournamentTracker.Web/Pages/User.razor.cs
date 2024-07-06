@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using FishingTournamentTracker.Web.Constants;
+using Microsoft.AspNetCore.Components;
 
 namespace FishingTournamentTracker.Web.Pages;
 
@@ -19,10 +20,10 @@ public partial class User : BaseFormValidationPage<UserModel>
 
     public async Task UpdateUser()
     {
-        InputValidationClasses![nameof(UserModel.FirstName)] = string.IsNullOrWhiteSpace(SelectedUser?.FirstName) ? "is-invalid" : string.Empty;
-        InputValidationClasses![nameof(UserModel.LastName)] = string.IsNullOrWhiteSpace(SelectedUser?.LastName) ? "is-invalid" : string.Empty;
-        InputValidationClasses![nameof(UserModel.Grade)] = SelectedUser?.Grade is null ? "is-invalid" : string.Empty;
-        InputValidationClasses![nameof(UserModel.Birthday)] = SelectedUser?.Birthday is null ? "is-invalid" : string.Empty;
+        InputValidationClasses![nameof(UserModel.FirstName)] = string.IsNullOrWhiteSpace(SelectedUser?.FirstName) ? ClassNames.InvalidField : string.Empty;
+        InputValidationClasses![nameof(UserModel.LastName)] = string.IsNullOrWhiteSpace(SelectedUser?.LastName) ? ClassNames.InvalidField : string.Empty;
+        InputValidationClasses![nameof(UserModel.Grade)] = SelectedUser?.Grade is null ? ClassNames.InvalidField : string.Empty;
+        InputValidationClasses![nameof(UserModel.Birthday)] = SelectedUser?.Birthday is null ? ClassNames.InvalidField : string.Empty;
 
         if (CheckHasFormErrors()) { return; }
 
