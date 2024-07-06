@@ -1,6 +1,7 @@
 ﻿@page "/user/{userId}"
 @inject Services.IUserService userService
 @inject NavigationManager navigationManager
+@inherits BaseFormValidationPage<Library.Models.DataModels.User>
 
 <h3>User @UserId</h3>
 
@@ -9,19 +10,31 @@
     <form method="post" @onsubmit="UpdateUser">
         <div class="mb-3">
             <label for="name" class="form-label">First Name</label>
-            <input @bind="SelectedUser!.FirstName" type="text" class="form-control" id="firstName" aria-describedby="firstName">
+            <input @bind="SelectedUser!.FirstName" type="text" class="form-control @InputValidationClasses!["FirstName"]" id="firstName" aria-describedby="firstName">
+            <div class="invalid-feedback">
+                Please choose a first name.
+            </div>
         </div>
         <div class="mb-3">
             <label for="name" class="form-label">Last Name</label>
-            <input @bind="SelectedUser!.LastName" type="text" class="form-control" id="lastName" aria-describedby="lastName">
+            <input @bind="SelectedUser!.LastName" type="text" class="form-control @InputValidationClasses!["LastName"]" id="lastName" aria-describedby="lastName">
+            <div class="invalid-feedback">
+                Please choose a last name.
+            </div>
         </div>
         <div class="mb-3">
             <label for="grade" class="form-label">Grade</label>
-            <input @bind="SelectedUser!.Grade" class="form-control" id="grade">
+            <input @bind="SelectedUser!.Grade" class="form-control @InputValidationClasses!["Grade"]" id="grade">
+            <div class="invalid-feedback">
+                Please choose a class grade.
+            </div>
         </div>
         <div class="mb-3">
             <label class="form-check-label" for="birthday">Birthday</label>
-            <input @bind="SelectedUser!.Birthday" type="date" class="form-control" id="birthday">
+            <input @bind="SelectedUser!.Birthday" type="date" class="form-control @InputValidationClasses!["Birthday"]" id="birthday">
+            <div class="invalid-feedback">
+                Please choose a birth date.
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
