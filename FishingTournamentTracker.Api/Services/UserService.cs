@@ -23,7 +23,7 @@ public class UserService(IUserRepository userRepository, ITournamentService tour
 
         var hydratedTournaments = fullTournamentTasks.Select(task => task.Result).ToList();
         var tournamentsByUser = hydratedTournaments
-            .Where(tournament => tournament.RegisteredTeams!.Any(team => team.UserOne!.Id == userId || team.UserTwo.Id == userId))
+            .Where(tournament => tournament.RegisteredTeams!.Any(team => team.UserOne!.Id == userId || team.UserTwo!.Id == userId))
             .ToList();
 
         var teams = tournamentsByUser.SelectMany(tournament => tournament.RegisteredTeams!
@@ -40,7 +40,6 @@ public class UserService(IUserRepository userRepository, ITournamentService tour
         await Task.WhenAll(teams.Select(team => tournamentService.DeleteRegisteredTeam(team.Id!)).ToList());
         await Task.WhenAll(scores.Select(score => tournamentService.DeleteRecordedScore(score.Id!)).ToList());
         await Task.WhenAll(fish.Select(fish => tournamentService.DeleteFishRecord(fish!)).ToList());
-        await Task.WhenAll(tournamentsByUser.Select(tournament => tournamentService.DeleteTournament(tournament!.Id!)).ToList());
 
         return await userRepository.Delete(userId);
     }

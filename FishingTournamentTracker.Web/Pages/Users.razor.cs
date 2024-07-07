@@ -8,6 +8,7 @@ public partial class Users
     [CascadingParameter]
     public Admin? LoggedInAdministrator { get; set; }
     public List<Library.Models.DataModels.User>? SelectedUsers { get; set; }
+    public string? CurrentUserId {  get; set; } = string.Empty;
     public int? PageNumber { get; set; }
     public int? PageSize { get; set; }
     public int? TotalPages { get; set; }
@@ -41,9 +42,9 @@ public partial class Users
         }
     }
     
-    private async Task Delete(string userId)
+    private async Task Delete()
     {
-        await userService.DeleteUser(userId);
+        await userService.DeleteUser(CurrentUserId!);
         await ResetData();
     }
 
