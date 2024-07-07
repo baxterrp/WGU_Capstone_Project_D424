@@ -7,7 +7,7 @@ namespace FishingTournamentTracker.Api.Controllers;
 [ApiController]
 public class TokenController(ITokenService tokenService) : BaseApiController
 {
-    [HttpPost]
+    [HttpGet]
     public async Task<IActionResult> GetToken()
     {
         return await ExecuteControllerAction(async () =>

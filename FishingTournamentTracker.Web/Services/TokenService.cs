@@ -6,7 +6,7 @@ public class TokenService(HttpClient httpClient) : ITokenService
 
     public async Task<string> GetApiToken()
     {
-        var httpResponse = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Post, _tokenApiUrl));
+        var httpResponse = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, _tokenApiUrl));
 
         if (httpResponse.IsSuccessStatusCode)
         {
