@@ -1,7 +1,30 @@
 ﻿@page "/"
+@inject Services.IAdminService adminService
+@inject NavigationManager navigationManager
+@inherits BaseFormValidationPage<Library.Models.DataModels.Admin>
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<h1>Login</h1>
+<form method="post" @onsubmit="Login">
+    <div class="mb-3">
+        <label for="name" class="form-label">User Name</label>
+        <input type="text" class="form-control @InputValidationClasses![nameof(UserName)]" @bind="UserName" id="userName" aria-describedby="userName">
+        <div class="invalid-feedback">
+            Please choose a user name.
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">Password</label>
+        <input type="password" class="form-control @InputValidationClasses![nameof(Password)]" @bind="Password" id="password" aria-describedby="password">
+        <div class="invalid-feedback">
+            Please choose a password.
+        </div>
+    </div>
+    <input type="hidden" class="form-control @LoginErrorClass"  />
+    <div class="invalid-feedback">
+        Could not login, invalid credentials.
+    </div>
+    <button class="btn btn-success mt-2" @onclick="NavigateToRegister">Register</button>
+    <button type="submit" class="mt-2 btn btn-primary">Login</button>
+</form>

@@ -1,10 +1,12 @@
 ﻿using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Library.Models.ViewModels;
 using FishingTournamentTracker.Web.Extensions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FishingTournamentTracker.Web.Services;
 
-public class TournamentService(HttpClient httpClient) : BaseHttpClientService(httpClient), ITournamentService
+public class TournamentService(HttpClient httpClient, ITokenService tokenService, IMemoryCache memoryCache) 
+    : BaseHttpClientService(httpClient, tokenService, memoryCache), ITournamentService
 {
     private const string _tournamentApiRoute = "api/tournament";
 

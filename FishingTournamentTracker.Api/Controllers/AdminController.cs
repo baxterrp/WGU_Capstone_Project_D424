@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FishingTournamentTracker.Api.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 public class AdminController(IAdminService adminService) : BaseApiController
 {
     [HttpPost("register")]

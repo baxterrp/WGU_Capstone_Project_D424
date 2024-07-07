@@ -2,10 +2,12 @@
 using FishingTournamentTracker.Library.Models.ViewModels;
 using FishingTournamentTracker.Library.Utility;
 using FishingTournamentTracker.Web.Extensions;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FishingTournamentTracker.Web.Services;
 
-public class UserService(HttpClient httpClient) : BaseHttpClientService(httpClient), IUserService
+public class UserService(HttpClient httpClient, ITokenService tokenService, IMemoryCache memoryCache) 
+    : BaseHttpClientService(httpClient, tokenService, memoryCache), IUserService
 {
     private const string _userApiRoute = "api/user";
 

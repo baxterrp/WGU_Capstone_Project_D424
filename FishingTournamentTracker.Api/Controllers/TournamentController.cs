@@ -1,12 +1,14 @@
 ﻿using FishingTournamentTracker.Api.Services;
 using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Library.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FishingTournamentTracker.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class TournamentController(ITournamentService tournamentService) : BaseApiController
 {
     [HttpPost]

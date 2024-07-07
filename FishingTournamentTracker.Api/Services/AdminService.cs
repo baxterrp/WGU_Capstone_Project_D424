@@ -6,7 +6,7 @@ namespace FishingTournamentTracker.Api.Services;
 
 public class AdminService(IAdminRepository adminRepository) : IAdminService
 {
-    public async Task<Admin?> Login(Admin admin)
+    public async Task<Admin> Login(Admin admin)
     {
         ArgumentNullException.ThrowIfNull(admin, nameof(admin));
         ArgumentException.ThrowIfNullOrWhiteSpace(admin.UserName, nameof(Admin.UserName));

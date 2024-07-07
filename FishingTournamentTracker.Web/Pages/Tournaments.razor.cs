@@ -1,12 +1,22 @@
-﻿namespace FishingTournamentTracker.Web.Pages;
+﻿using Microsoft.AspNetCore.Components;
+
+namespace FishingTournamentTracker.Web.Pages;
 
 public partial class Tournaments
 {
+    [CascadingParameter]
+    public Library.Models.DataModels.Admin? LoggedInAdministrator { get; set; }
+
     public List<Library.Models.DataModels.Tournament>? TournamentList { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        if (string.IsNullOrWhiteSpace(LoggedInAdministrator?.Id))
+        {
+            navigationManager.NavigateTo("/");
+        }
 
         try
         {
