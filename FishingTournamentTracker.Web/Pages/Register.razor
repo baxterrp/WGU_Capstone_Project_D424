@@ -1,4 +1,36 @@
 ﻿@page "/register"
+@inject Services.IAdminService adminService
+@inject NavigationManager navigationManager
+@inherits BaseFormValidationPage<Library.Models.DataModels.Admin>
 
 <h3>Register</h3>
+
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <form method="post" @onsubmit="OnSubmit">
+        <div class="mb-3">
+            <label for="name" class="form-label">User Name</label>
+            <input type="text" class="form-control @InputValidationClasses![nameof(UserName)]" @bind="UserName" id="userName" aria-describedby="userName">
+            <div class="invalid-feedback">
+                Please choose a user name.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Password</label>
+            <input type="password" class="form-control @InputValidationClasses![nameof(Password)]" @bind="Password" id="password" aria-describedby="password">
+            <div class="invalid-feedback">
+                Please choose a password.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <input type="hidden" class="form-control @RegisterErrorClass" />
+        <div class="invalid-feedback">
+            Could not login, invalid credentials.
+        </div>
+    </form>
+}
 

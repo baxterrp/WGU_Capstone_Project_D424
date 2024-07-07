@@ -1,6 +1,7 @@
 ﻿using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Web.Extensions;
 using System.Text.Json;
+using Encryption = BCrypt.Net.BCrypt;
 
 namespace FishingTournamentTracker.Web.Services;
 
@@ -10,14 +11,22 @@ public class AdminService(HttpClient httpClient) : IAdminService
 
     public async Task<Admin?> Login(Admin admin)
     {
-        return await SendAdminRequest(new HttpRequestMessage(HttpMethod.Post, $"{_adminApiUrl}/login")
+        var loggedInAdmin = await SendAdminRequest(new HttpRequestMessage(HttpMethod.Post, $"{_adminApiUrl}/login")
         {
             Content = admin.ToHttpContent()
         });
+
+        if (loggedInAdmin is not null && Encryption.Verify(admin.Password, loggedInAdmin.Password) )
+        {
+            return loggedInAdmin;
+        }
+
+        return null;
     }
 
     public async Task<Admin?> Register(Admin admin)
     {
+        admin.Password = Encryption.HashPassword(admin.Password);
         return await SendAdminRequest(new HttpRequestMessage(HttpMethod.Post, $"{_adminApiUrl}/register")
         {
             Content = admin.ToHttpContent()

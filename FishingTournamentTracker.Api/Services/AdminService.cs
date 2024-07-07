@@ -10,7 +10,6 @@ public class AdminService(IAdminRepository adminRepository) : IAdminService
     {
         ArgumentNullException.ThrowIfNull(admin, nameof(admin));
         ArgumentException.ThrowIfNullOrWhiteSpace(admin.UserName, nameof(Admin.UserName));
-        ArgumentException.ThrowIfNullOrWhiteSpace(admin.Password, nameof(Admin.Password));
 
         return await adminRepository.Login(admin) ?? throw new UnauthorizedLoginAttemptException();
     }

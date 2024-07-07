@@ -20,6 +20,12 @@ public partial class Home : BaseFormValidationPage<Admin>
 
     private async Task Login()
     {
+        Loading = true;
+
+        // I couldnt figure out why my loader wouldn't display until after an additional async operation has executed,
+        // waiting 1 millisecond along with changing state to get icon 
+        await Task.WhenAll(InvokeAsync(() => StateHasChanged()), Task.Delay(1));
+
         LoginErrorClass = string.Empty;
         InputValidationClasses![nameof(UserName)] = string.IsNullOrWhiteSpace(UserName) ? ClassNames.InvalidField : string.Empty;
         InputValidationClasses![nameof(Password)] = string.IsNullOrWhiteSpace(Password) ? ClassNames.InvalidField : string.Empty;
@@ -32,6 +38,8 @@ public partial class Home : BaseFormValidationPage<Admin>
             Password = Password
         });
 
+        Loading = false;
+
         if (admin is null)
         {
             LoginErrorClass = ClassNames.InvalidField;
@@ -39,7 +47,6 @@ public partial class Home : BaseFormValidationPage<Admin>
         }
 
         SetLoggedInAdmin?.Invoke(admin);
-
         navigationManager.NavigateTo("/users");
     }
 }

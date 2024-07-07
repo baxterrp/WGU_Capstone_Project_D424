@@ -20,7 +20,6 @@ namespace FishingTournamentTracker.Api.Repositories
         {
             var parameters = new DynamicParameters();
             parameters.Add(nameof(Admin.UserName), admin.UserName);
-            parameters.Add(nameof(Admin.Password), admin.Password);
 
             return (await Search<Admin>(parameters))?.FirstOrDefault();
         }

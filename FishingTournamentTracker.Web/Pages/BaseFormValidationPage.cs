@@ -6,6 +6,7 @@ namespace FishingTournamentTracker.Web.Pages;
 public abstract class BaseFormValidationPage<TEntity> : ComponentBase where TEntity : IDatabaseEntity
 {
     protected Dictionary<string, string>? InputValidationClasses { get; set; }
+    protected bool Loading { get; set; } = false;
 
     protected BaseFormValidationPage()
     {
@@ -15,6 +16,13 @@ public abstract class BaseFormValidationPage<TEntity> : ComponentBase where TEnt
 
     protected bool CheckHasFormErrors()
     {
-        return InputValidationClasses!.Any(validation => !string.IsNullOrWhiteSpace(validation.Value));
+        var hasErrors = InputValidationClasses!.Any(validation => !string.IsNullOrWhiteSpace(validation.Value));
+
+        if (hasErrors)
+        {
+            Loading = false;
+        }
+
+        return hasErrors;
     }
 }
