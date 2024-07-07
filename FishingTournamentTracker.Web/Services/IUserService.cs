@@ -11,4 +11,5 @@ public interface IUserService
     Task<IEnumerable<User>> GetAllUsers();
     Task<User?> GetUserById(string userId);
     Task<IEnumerable<User>?> AutomatedUserUpload(string upload);
+    Task DeleteUser(string userId);
 }

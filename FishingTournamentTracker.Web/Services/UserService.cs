@@ -11,6 +11,11 @@ public class UserService(HttpClient httpClient, ITokenService tokenService, IMem
 {
     private const string _userApiRoute = "api/user";
 
+    public async Task DeleteUser(string userId)
+    {
+        await TrySendHttpRequest<bool>(new HttpRequestMessage(HttpMethod.Delete, $"{_userApiRoute}/{userId}"));
+    }
+
     public async Task<User?> GetUserById(string userId)
     {
         return await TrySendHttpRequest<User>(new HttpRequestMessage(HttpMethod.Get, $"{_userApiRoute}/{userId}"));

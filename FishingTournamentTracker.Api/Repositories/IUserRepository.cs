@@ -10,4 +10,5 @@ public interface IUserRepository
     Task<User> UpdateUser(User user);
     Task<User> GetUserById(string userId);
     Task<int> CountUsers(UserFilter userFilter);
+    Task<bool> Delete(string userId);
 }

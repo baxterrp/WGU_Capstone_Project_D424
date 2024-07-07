@@ -12,6 +12,14 @@ namespace FishingTournamentTracker.Api.Controllers;
 [Authorize]
 public class UserController(IUserService userService) : BaseApiController
 {
+    [HttpDelete("{userId}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] string userId)
+    {
+        return await ExecuteControllerAction(async () =>
+        {
+            return Ok(await userService.Delete(userId));
+        });
+    }
     [HttpPost]
     public async Task<IActionResult> AddUser([FromBody] User user)
     {

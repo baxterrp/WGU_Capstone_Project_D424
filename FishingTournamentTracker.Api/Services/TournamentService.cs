@@ -2,10 +2,16 @@
 using FishingTournamentTracker.Api.Repositories;
 using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Library.Models.ViewModels;
+using System.Runtime.InteropServices;
 
 namespace FishingTournamentTracker.Api.Services;
-public class TournamentService(ITournamentRepository tournamentRepository, IUserService userService, IFileParser fileParser) : ITournamentService
+public class TournamentService(ITournamentRepository tournamentRepository, IUserRepository userRepository, IFileParser fileParser) : ITournamentService
 {
+    public async Task<bool> DeleteTournament(string tournamentId)
+    {
+        return await tournamentRepository.DeleteTournament(tournamentId);
+    }
+
     public async Task<byte[]> DownloadResultExcel(string tournamentId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tournamentId, nameof(tournamentId));
@@ -58,8 +64,8 @@ public class TournamentService(ITournamentRepository tournamentRepository, IUser
             registeredTeams.Add(new TeamViewModel
             {
                 Id = registration.Id,
-                UserOne = await userService.GetUserById(registration.UserOne!),
-                UserTwo = await userService.GetUserById(registration.UserTwo!),
+                UserOne = await userRepository.GetUserById(registration.UserOne!),
+                UserTwo = await userRepository.GetUserById(registration.UserTwo!),
             });
         }
 
@@ -84,8 +90,8 @@ public class TournamentService(ITournamentRepository tournamentRepository, IUser
         foreach(var score in scores)
         {
             var team = teams.FirstOrDefault(t => t.Id == score.TeamId);
-            var userOne = await userService.GetUserById(team!.UserOne!);
-            var userTwo = await userService.GetUserById(team.UserTwo!);
+            var userOne = await userRepository.GetUserById(team!.UserOne!);
+            var userTwo = await userRepository.GetUserById(team.UserTwo!);
 
             if (team is null) { continue; }
 
@@ -125,5 +131,20 @@ public class TournamentService(ITournamentRepository tournamentRepository, IUser
         ArgumentException.ThrowIfNullOrWhiteSpace(tournamentRegistration.UserTwo);
 
         return await tournamentRepository.RegisterTeam(tournamentRegistration);
+    }
+
+    public async Task<bool> DeleteRegisteredTeam(string teamId)
+    {
+        return await tournamentRepository.DeleteRegisteredTeam(teamId);
+    }
+
+    public async Task<bool> DeleteRecordedScore(string scoreId)
+    {
+        return await tournamentRepository.DeleteRecordedScore(scoreId);
+    }
+
+    public async Task<bool> DeleteFishRecord(string recordedFishId)
+    {
+        return await tournamentRepository.DeleteFishRecord(recordedFishId);
     }
 }

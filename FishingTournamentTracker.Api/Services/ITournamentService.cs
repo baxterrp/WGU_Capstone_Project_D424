@@ -14,4 +14,8 @@ public interface ITournamentService
     Task<IEnumerable<TeamScoreViewModel>> GetResults(string tournamentId);
     Task<IEnumerable<TournamentResultPrintout>> GetResultPrintout(string tournamentId);
     Task<byte[]> DownloadResultExcel(string tournamentId);
+    Task<bool> DeleteTournament(string tournamentId);
+    Task<bool> DeleteRegisteredTeam(string teamId);
+    Task<bool> DeleteRecordedScore(string scoreId);
+    Task<bool> DeleteFishRecord(string recordedFishId);
 }

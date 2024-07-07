@@ -13,4 +13,8 @@ public interface ITournamentRepository
     Task<RecordedFish> SaveRecordedFish(RecordedFish recordedFish);
     Task<IEnumerable<TournamentScore>> GetResults(string tournamentId);
     Task<IEnumerable<RecordedFish>> GetRecordedFish(string scoreId);
+    Task<bool> DeleteTournament(string tournamentId);
+    Task<bool> DeleteRegisteredTeam(string teamId);
+    Task<bool> DeleteRecordedScore(string scoreId);
+    Task<bool> DeleteFishRecord(string recordedFishId);
 }

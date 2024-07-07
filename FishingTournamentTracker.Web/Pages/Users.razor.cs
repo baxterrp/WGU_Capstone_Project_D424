@@ -41,6 +41,12 @@ public partial class Users
         }
     }
     
+    private async Task Delete(string userId)
+    {
+        await userService.DeleteUser(userId);
+        await ResetData();
+    }
+
     private async Task Search(int? page = null)
     {
         try
@@ -56,5 +62,23 @@ public partial class Users
         {
             SelectedUsers = [];
         }
+    }
+
+    private async Task ResetData()
+    {
+        try
+        {
+            var paginatedResponse = await userService.FilterUsers(string.Empty, string.Empty, 1, 10);
+            PageNumber = paginatedResponse?.PageNumber ?? 1;
+            PageSize = paginatedResponse?.PageSize ?? 10;
+            SelectedUsers = paginatedResponse?.Data?.ToList() ?? [];
+            TotalPages = paginatedResponse?.TotalPages ?? 0;
+        }
+        catch
+        {
+            SelectedUsers = [];
+        }
+
+        await InvokeAsync(async () => StateHasChanged());
     }
 }

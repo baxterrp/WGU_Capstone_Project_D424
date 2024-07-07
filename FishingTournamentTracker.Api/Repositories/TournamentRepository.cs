@@ -60,4 +60,56 @@ public class TournamentRepository(IOptions<DatabaseConfiguration> databaseConfig
     {
         return await Insert(tournamentScore);
     }
+
+    public async Task<bool> DeleteTournament(string tournamentId)
+    {
+        try
+        {
+            await Delete<Tournament>(tournamentId);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteRegisteredTeam(string teamId)
+    {
+        try
+        {
+            await Delete<TournamentRegistration>(teamId);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteRecordedScore(string scoreId)
+    {
+        try
+        {
+            await Delete<TournamentScore>(scoreId);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteFishRecord(string recordedFishId)
+    {
+        try
+        {
+            await Delete<RecordedFish>(recordedFishId);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

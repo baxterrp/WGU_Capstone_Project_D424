@@ -14,6 +14,12 @@ public abstract class BaseRepository(IOptions<DatabaseConfiguration> databaseCon
 
     protected int? CurrentPage { get; set; }
 
+    protected async Task Delete<TEntity>(string entityId)
+    {
+        using var connection = new SqlConnection(databaseConfiguration.Value.ConnectionString);
+        await connection.ExecuteAsync(BuildDeleteCommand<TEntity>(), new { Id = entityId });
+    }
+
     protected async Task<int> Count<TEntity>(DynamicParameters dynamicParameters) where TEntity : IDatabaseEntity
     {
         using var connection = new SqlConnection(databaseConfiguration.Value.ConnectionString);
@@ -45,7 +51,6 @@ public abstract class BaseRepository(IOptions<DatabaseConfiguration> databaseCon
         return await connection.QuerySingleAsync<TEntity>(BuildFindByIdQuery<TEntity>(), new { Id = entityId });
     }
 
-
     private string BuildSearchQuery<TEntity>(DynamicParameters dynamicParameters)
     {
         var stringBuilder = new StringBuilder();
@@ -62,6 +67,11 @@ public abstract class BaseRepository(IOptions<DatabaseConfiguration> databaseCon
         }
 
         return stringBuilder.ToString();
+    }
+
+    private static string BuildDeleteCommand<TEntity>()
+    {
+        return $"DELETE FROM [dbo].[{typeof(TEntity).Name}] WHERE [Id] = @Id";
     }
 
     private static string BuildCountQuery<TEntity>(DynamicParameters dynamicParameters)

@@ -5,8 +5,46 @@ using FishingTournamentTracker.Library.Utility;
 
 namespace FishingTournamentTracker.Api.Services;
 
-public class UserService(IUserRepository userRepository, IFileParser fileParser) : IUserService
+public class UserService(IUserRepository userRepository, ITournamentService tournamentService, IFileParser fileParser) : IUserService
 {
+    /// <summary>
+    /// Loaded way to delete a user, but i'm bound by the design of my base repo
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<bool> Delete(string userId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(userId, nameof(userId));
+
+        var tournaments = await tournamentService.FilterTournaments();
+        var fullTournamentTasks = tournaments.Select(tournament => tournamentService.GetTournamentById(tournament.Id!)).ToList();
+
+        await Task.WhenAll(fullTournamentTasks);
+
+        var hydratedTournaments = fullTournamentTasks.Select(task => task.Result).ToList();
+        var tournamentsByUser = hydratedTournaments
+            .Where(tournament => tournament.RegisteredTeams!.Any(team => team.UserOne!.Id == userId || team.UserTwo.Id == userId))
+            .ToList();
+
+        var teams = tournamentsByUser.SelectMany(tournament => tournament.RegisteredTeams!
+            .Where(team => team.UserOne!.Id == userId || team.UserTwo!.Id == userId))
+            .ToList();
+
+        var scores = tournamentsByUser.SelectMany(tournament => tournament.Results!
+            .Where(result => teams.Any(team => team.Id == result.TeamId)))
+            .ToList();
+
+        var fish = scores.SelectMany(score => score.Fish.Select(fish => fish.Id))
+            .ToList();
+
+        await Task.WhenAll(teams.Select(team => tournamentService.DeleteRegisteredTeam(team.Id!)).ToList());
+        await Task.WhenAll(scores.Select(score => tournamentService.DeleteRecordedScore(score.Id!)).ToList());
+        await Task.WhenAll(fish.Select(fish => tournamentService.DeleteFishRecord(fish!)).ToList());
+        await Task.WhenAll(tournamentsByUser.Select(tournament => tournamentService.DeleteTournament(tournament!.Id!)).ToList());
+
+        return await userRepository.Delete(userId);
+    }
+
     public async Task<IEnumerable<User>> BulkUserUpload(FileUpload upload)
     {
         ArgumentNullException.ThrowIfNull(upload);
@@ -59,5 +97,4 @@ public class UserService(IUserRepository userRepository, IFileParser fileParser)
         ArgumentNullException.ThrowIfNull(user, nameof(user));
         ArgumentException.ThrowIfNullOrWhiteSpace(user.FirstName, nameof(user.FirstName));
     }
-
 }

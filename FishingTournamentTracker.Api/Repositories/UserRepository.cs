@@ -18,6 +18,19 @@ public class UserRepository(IOptions<DatabaseConfiguration> databaseConfiguratio
         return await Count<User>(BuildDynamicParameters(userFilter));
     }
 
+    public async Task<bool> Delete(string userId)
+    {
+        try
+        {
+            await Delete<User>(userId);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public async Task<IEnumerable<User>> FilterUsers(UserFilter userFilter)
     {
         return await Search<User>(BuildDynamicParameters(userFilter));

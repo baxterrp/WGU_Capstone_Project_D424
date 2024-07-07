@@ -12,4 +12,5 @@ public interface IUserService
     Task<PaginatedResult<User>> FilterUsers(UserFilter userFilter);
     Task<User> GetUserById(string userId);
     Task<IEnumerable<User>> BulkUserUpload(FileUpload upload);
+    Task<bool> Delete(string userId);
 }

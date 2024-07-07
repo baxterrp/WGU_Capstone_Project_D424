@@ -45,7 +45,6 @@ public class FileParser : IFileParser
                 worksheet.Cells[row, entityColumn++].Value = property.GetValue(entity);
             }
 
-            // increment row for each entity
             row++;
         }
 
