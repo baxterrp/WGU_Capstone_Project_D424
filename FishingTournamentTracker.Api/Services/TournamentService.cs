@@ -2,13 +2,13 @@
 using FishingTournamentTracker.Api.Repositories;
 using FishingTournamentTracker.Library.Models.DataModels;
 using FishingTournamentTracker.Library.Models.ViewModels;
-using System.Runtime.InteropServices;
 
 namespace FishingTournamentTracker.Api.Services;
 public class TournamentService(ITournamentRepository tournamentRepository, IUserRepository userRepository, IFileParser fileParser) : ITournamentService
 {
     public async Task<bool> DeleteTournament(string tournamentId)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentId);
         return await tournamentRepository.DeleteTournament(tournamentId);
     }
 
@@ -17,9 +17,9 @@ public class TournamentService(ITournamentRepository tournamentRepository, IUser
         ArgumentException.ThrowIfNullOrWhiteSpace(tournamentId, nameof(tournamentId));
 
         var tournament = await GetTournamentById(tournamentId);
-        var printout = tournament.ToTournamentResultPrintout();
+        var printouts = tournament.ToTournamentResultPrintout();
 
-        return fileParser.GenerateExcel(printout);
+        return fileParser.GenerateExcel(printouts);
     }
 
     public async Task<Tournament> CreateTournament(Tournament tournament)
@@ -126,25 +126,28 @@ public class TournamentService(ITournamentRepository tournamentRepository, IUser
     public async Task<TournamentRegistration> RegisterTeam(TournamentRegistration tournamentRegistration)
     {
         ArgumentNullException.ThrowIfNull(tournamentRegistration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentRegistration.Tournament);
-        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentRegistration.UserOne);
-        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentRegistration.UserTwo);
+        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentRegistration.Tournament, nameof(tournamentRegistration.Tournament));
+        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentRegistration.UserOne, nameof(tournamentRegistration.UserOne));
+        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentRegistration.UserTwo, nameof(tournamentRegistration.UserTwo));
 
         return await tournamentRepository.RegisterTeam(tournamentRegistration);
     }
 
     public async Task<bool> DeleteRegisteredTeam(string teamId)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(teamId, nameof(teamId));
         return await tournamentRepository.DeleteRegisteredTeam(teamId);
     }
 
     public async Task<bool> DeleteRecordedScore(string scoreId)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(scoreId, nameof(scoreId));
         return await tournamentRepository.DeleteRecordedScore(scoreId);
     }
 
     public async Task<bool> DeleteFishRecord(string recordedFishId)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(recordedFishId, nameof(recordedFishId));
         return await tournamentRepository.DeleteFishRecord(recordedFishId);
     }
 }

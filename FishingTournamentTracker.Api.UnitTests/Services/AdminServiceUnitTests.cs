@@ -10,7 +10,7 @@ namespace FishingTournamentTracker.Api.UnitTests.Services;
 public class AdminServiceUnitTests
 {
     private readonly Mock<IAdminRepository> _mockAdminRepository;
-    private readonly IAdminService _adminService;
+    private readonly AdminService _adminService;
 
     public AdminServiceUnitTests()
     {

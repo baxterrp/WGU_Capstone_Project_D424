@@ -6,7 +6,7 @@ namespace FishingTournamentTracker.Api.UnitTests.Services;
 
 public class FileParserUnitTests
 {
-    private readonly IFileParser _fileParser;
+    private readonly FileParser _fileParser;
 
     public FileParserUnitTests()
     {
