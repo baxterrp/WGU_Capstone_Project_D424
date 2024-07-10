@@ -49,7 +49,7 @@ public abstract class BaseHttpClientService(HttpClient httpClient, ITokenService
 
         if (!string.IsNullOrWhiteSpace(token))
         {
-            memoryCache.Set(HttpValues.ApiToken, token, new DateTimeOffset(DateTime.Now.AddHours(1)));
+            memoryCache.Set(HttpValues.ApiToken, token, new DateTimeOffset(DateTime.Now.AddMinutes(10)));
         }
 
         return token;
