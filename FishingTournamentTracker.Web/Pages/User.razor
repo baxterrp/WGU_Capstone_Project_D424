@@ -1,9 +1,12 @@
 ﻿@page "/user/{userId}"
 @inject Services.IUserService userService
 @inject NavigationManager navigationManager
-@inherits BaseFormValidationPage<Library.Models.DataModels.User>
+@inherits BaseFishingTournamentView<Library.Models.DataModels.User>
 
-<h3>User @UserId</h3>
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
 
 @if (SelectedUser is not null)
 {
@@ -39,7 +42,7 @@
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 }
-else
+else if (!Loading)
 {
-    <p>Loading...</p>
+    <p>User not found..</p>
 }

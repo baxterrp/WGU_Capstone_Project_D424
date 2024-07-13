@@ -19,6 +19,7 @@ public partial class RecordTournamentScore
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        Loading = true;
 
         FishWeight = 0;
 
@@ -29,6 +30,7 @@ public partial class RecordTournamentScore
         };
 
         SelectedTournament = await tournamentService.GetTournamentById(TournamentId!);
+        Loading = false;
     }
 
     private void AddFish(EventArgs e)
@@ -45,8 +47,10 @@ public partial class RecordTournamentScore
 
     private async Task OnSubmit(EventArgs e)
     {
+        Loading = true;
         TeamScore!.TeamId = SelectedTeamId;
         await tournamentService.SaveTeamScore(TeamScore!);
+        Loading = false;
         navigationManager.NavigateTo($"/tournament/{TournamentId}");
     }
 }

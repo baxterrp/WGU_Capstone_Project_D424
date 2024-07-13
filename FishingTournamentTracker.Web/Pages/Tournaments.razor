@@ -1,6 +1,7 @@
 ﻿@page "/tournaments"
 @inject Services.ITournamentService tournamentService
 @inject NavigationManager navigationManager
+@inherits BaseFishingTournamentView<Library.Models.DataModels.Tournament>
 
 <PageTitle>Tournaments</PageTitle>
 
@@ -10,6 +11,11 @@
     </div>
 </div>
 <hr />
+
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
 
 @if (TournamentList is not null && TournamentList.Any())
 {
@@ -33,7 +39,7 @@
         </tbody>
     </table>
 }
-else
+else if (!Loading)
 {
     <p>No Tournaments Found...</p>
 }

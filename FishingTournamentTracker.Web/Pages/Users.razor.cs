@@ -23,6 +23,8 @@ public partial class Users
     {
         await base.OnInitializedAsync();
 
+        Loading = true;
+
         if (string.IsNullOrWhiteSpace(LoggedInAdministrator?.Id))
         {
             navigationManager.NavigateTo("/");
@@ -40,18 +42,25 @@ public partial class Users
         {
             SelectedUsers = [];
         }
+        finally
+        {
+            Loading = false;
+        }
     }
     
     private async Task Delete()
     {
+        Loading = true;
         await userService.DeleteUser(CurrentUserId!);
         await ResetData();
+        Loading = false;
     }
 
     private async Task Search(int? page = null)
     {
         try
         {
+            Loading = true;
             var pageNumber = page ?? 1;
             var paginatedResponse = await userService.FilterUsers(SearchValue, string.Empty, pageNumber, PageSize);
             PageNumber = paginatedResponse?.PageNumber ?? 1;
@@ -62,6 +71,10 @@ public partial class Users
         catch
         {
             SelectedUsers = [];
+        }
+        finally
+        {
+            Loading = false;
         }
     }
 

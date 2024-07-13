@@ -5,6 +5,13 @@ namespace FishingTournamentTracker.Web.Pages;
 public partial class AutomatedUserUpload
 {
     private string? CurrentFileUpload { get; set; }
+    private bool Loading {  get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Loading = false;
+    }
 
     private bool UploadFileIsDisabled
     {
@@ -21,6 +28,7 @@ public partial class AutomatedUserUpload
 
     private async Task UploadFile()
     {
+        Loading = true;
         await userService.AutomatedUserUpload(CurrentFileUpload!);
         navigationManager.NavigateTo("/users");
     }

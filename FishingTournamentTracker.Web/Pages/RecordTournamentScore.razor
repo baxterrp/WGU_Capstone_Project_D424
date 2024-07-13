@@ -1,6 +1,12 @@
 ﻿@page "/tournament/{tournamentId}/record"
 @inject Services.ITournamentService tournamentService
 @inject NavigationManager navigationManager
+@inherits BaseFishingTournamentView<Library.Models.DataModels.TournamentScore>
+
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
 
 @if (SelectedTournament is not null)
 {
@@ -49,8 +55,4 @@
         </table>
 
     }
-}
-else
-{
-    <p>Loading...</p>
 }

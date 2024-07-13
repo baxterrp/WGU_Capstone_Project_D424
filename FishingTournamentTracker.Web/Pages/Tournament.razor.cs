@@ -34,16 +34,22 @@ public partial class Tournament
     {
         await base.OnInitializedAsync();
 
+        Loading = true;
+
         SelectedTournament = await tournamentService.GetTournamentById(TournamentId!);
         TournamentResults = (await tournamentService.GetTournamentResultPrintout(TournamentId!))?.ToList() ?? [];
+
+        Loading = false;
     }
 
     private async Task DownloadResultPrintout()
     {
+        Loading = true;
         var binaryData = await tournamentService.DownloadResultsSpreadsheet(TournamentId!);
         var fileName = $"{DateTime.Now:yyyy-M-d}-{TournamentId}.xlsx";
 
         await jsRuntime.InvokeVoidAsync("saveFile", fileName, binaryData);
+        Loading = false;
     }
 
     private void GoToRecordScorePage()

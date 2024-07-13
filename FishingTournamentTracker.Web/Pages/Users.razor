@@ -1,8 +1,14 @@
 ﻿@page "/users"
 @inject Services.IUserService userService
 @inject NavigationManager navigationManager
+@inherits BaseFishingTournamentView<Library.Models.DataModels.User>
 
 <PageTitle>View Users</PageTitle>
+
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
 
 <div class="row mb-3 justify-content-end">
     <div class="col-auto">
@@ -70,12 +76,9 @@
             </li>
         </ul>
     </nav>
-}
-else
+}else if (!Loading)
 {
-    <div class="row">
-        <p>No Users Found...</p>
-    </div>
+    <p>No users found...</p>
 }
 
 <!-- Modal -->

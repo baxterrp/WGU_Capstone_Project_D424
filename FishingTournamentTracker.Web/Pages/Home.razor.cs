@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace FishingTournamentTracker.Web.Pages;
 
-public partial class Home : BaseFormValidationPage<Admin>
+public partial class Home : BaseFishingTournamentView<Admin>
 {
     [CascadingParameter]
     public Action<Admin>? SetLoggedInAdmin { get; set; }

@@ -2,6 +2,12 @@
 @inject Services.ITournamentService tournamentService
 @inject Services.IUserService userService
 @inject NavigationManager navigatonManager
+@inherits BaseFishingTournamentView<Library.Models.DataModels.TournamentRegistration>
+
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
 
 @if (Tournament is not null && Users is not null)
 {
@@ -9,8 +15,8 @@
 
     <select class="form-select mb-3" aria-label="userone" @bind="TournamentRegistration!.UserOne">
         <option>Select a User</option>
-        
-        @foreach(var user in Users)
+
+        @foreach (var user in Users)
         {
             <option value="@user.Id">@user.FirstName @user.LastName</option>
         }
@@ -26,8 +32,4 @@
     </select>
 
     <button class="btn btn-primary" @onclick="OnSubmit" disabled="@RegisterIsDisabled">Register</button>
-}
-else
-{
-    <p class="mt-3">Loading...</p>
 }

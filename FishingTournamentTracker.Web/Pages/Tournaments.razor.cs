@@ -13,6 +13,7 @@ public partial class Tournaments
     {
         await base.OnInitializedAsync();
 
+
         if (string.IsNullOrWhiteSpace(LoggedInAdministrator?.Id))
         {
             navigationManager.NavigateTo("/");
@@ -20,12 +21,17 @@ public partial class Tournaments
 
         try
         {
+            Loading = true;
             var tournaments = await tournamentService.SearchTournaments();
             TournamentList = tournaments?.ToList() ?? [];
         }
         catch
         {
             TournamentList = [];
+        }
+        finally
+        {
+            Loading = false;
         }
     }
 

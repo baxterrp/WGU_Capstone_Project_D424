@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace FishingTournamentTracker.Web.Pages;
 
-public partial class Register : BaseFormValidationPage<Admin>
+public partial class Register : BaseFishingTournamentView<Admin>
 {
     [CascadingParameter]
     public Action<Admin>? SetLoggedInAdmin { get; set; }
@@ -16,8 +16,8 @@ public partial class Register : BaseFormValidationPage<Admin>
     {
         Loading = true;
 
-        // I couldnt figure out why my loader wouldn't display until after an additional async operation has executed,
-        // waiting 1 millisecond along with changing state to get icon 
+        //// I couldnt figure out why my loader wouldn't display until after an additional async operation has executed,
+        //// waiting 1 millisecond along with changing state to get icon 
         await Task.WhenAll(InvokeAsync(() => StateHasChanged()), Task.Delay(1));
 
         RegisterErrorClass = string.Empty;
@@ -32,22 +32,18 @@ public partial class Register : BaseFormValidationPage<Admin>
             Password = Password,
         });
 
-        Loading = false;
         await InvokeAsync(() => StateHasChanged());
 
         if (admin is null)
         {
             RegisterErrorClass = ClassNames.InvalidField;
+            Loading = false;
             return;
         }
 
         SetLoggedInAdmin?.Invoke(admin);
+        Loading = false;
+
         navigationManager.NavigateTo("/users");
-    }
-
-    private async Task Do()
-    {
-
-
     }
 }

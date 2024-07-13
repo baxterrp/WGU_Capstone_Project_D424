@@ -4,7 +4,7 @@ namespace FishingTournamentTracker.Web.Pages;
 
 using UserModel = Library.Models.DataModels.User;
 
-public partial class AddUser : BaseFormValidationPage<UserModel>
+public partial class AddUser : BaseFishingTournamentView<UserModel>
 {
     public UserModel? SelectedUser { get; set; }
 
@@ -20,11 +20,14 @@ public partial class AddUser : BaseFormValidationPage<UserModel>
         InputValidationClasses![nameof(UserModel.LastName)] = string.IsNullOrWhiteSpace(SelectedUser?.LastName) ? ClassNames.InvalidField : string.Empty;
         InputValidationClasses![nameof(UserModel.Grade)] = SelectedUser?.Grade is null ? ClassNames.InvalidField : string.Empty;
         InputValidationClasses![nameof(UserModel.Birthday)] = SelectedUser?.Birthday is null ? ClassNames.InvalidField : string.Empty;
+        
+        Loading = true;
 
         if (CheckHasFormErrors()) { return; }
 
         await userService.AddUser(SelectedUser!);
         SelectedUser = new();
+        Loading = false;
         navigationManager.NavigateTo("/users");
     }
 }

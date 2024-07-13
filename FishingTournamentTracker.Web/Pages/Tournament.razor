@@ -2,8 +2,14 @@
 @inject Services.ITournamentService tournamentService
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navigationManager
+@inherits BaseFishingTournamentView<Library.Models.DataModels.Tournament>
 
 <PageTitle>View/Edit Tournament</PageTitle>
+
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
 
 @if (SelectedTournament is not null)
 {
@@ -100,9 +106,5 @@
             </div>
         </div>
     </div>
-}
-else
-{
-    <p>Could not load tournament @TournamentId</p>
 }
 

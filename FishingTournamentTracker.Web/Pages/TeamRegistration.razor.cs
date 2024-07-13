@@ -27,6 +27,8 @@ public partial class TeamRegistration
     {
         await base.OnInitializedAsync();
 
+        Loading = true;
+
         TournamentRegistration = new()
         {
             Tournament = TournamentId,
@@ -34,11 +36,16 @@ public partial class TeamRegistration
         Tournament = await tournamentService.GetTournamentById(TournamentId!);
         var users = await userService.GetAllUsers();
         Users = users is not null ? [.. users] : [];
+
+        Loading = false;
     }
 
     private async Task OnSubmit()
     {
+        Loading = true;
         await tournamentService.RegisterTeam(TournamentRegistration!);
+        Loading = false;
+
         navigatonManager.NavigateTo($"/tournament/{TournamentId}");
     }
 

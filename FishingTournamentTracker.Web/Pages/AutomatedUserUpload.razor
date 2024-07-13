@@ -3,6 +3,12 @@
 @inject NavigationManager navigationManager
 
 <PageTitle>Automated User Upload</PageTitle>
+
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
+
 <div class="row container">
     <div class="col-sm-4">
         <h3>Attach User Registrations</h3>

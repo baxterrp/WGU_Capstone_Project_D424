@@ -1,9 +1,15 @@
 ﻿@page "/addtournament"
 @inject Services.ITournamentService tournamentService
 @inject NavigationManager navigationManager
-@inherits BaseFormValidationPage<Library.Models.DataModels.Tournament>
+@inherits BaseFishingTournamentView<Library.Models.DataModels.Tournament>
 
 <PageTitle>Create Tournament</PageTitle>
+
+@if (Loading)
+{
+    <div class="spinner"></div>
+}
+
 <h1>Create Tournament</h1>
 <form method="post" class="needs-validation" @onsubmit="async () => await OnSubmit()">
     <div class="mb-3">
